@@ -1,0 +1,12 @@
+<svg width="24" height="16" viewBox="0 0 24 16" xmlns="http://www.w3.org/2000/svg">
+  <!-- Faixa vermelha superior -->
+  <rect width="24" height="4" fill="#C60B1E"/>
+  
+  <!-- Faixa amarela central -->
+  <rect y="4" width="24" height="8" fill="#FFC400"/>
+  
+  <!-- Faixa vermelha inferior -->
+  <rect y="12" width="24" height="4" fill="#C60B1E"/>
+</svg>
+
+

@@ -34,3 +34,4 @@ public/
 ## Fallback:
 Se o vídeo não carregar, será exibida uma imagem de fundo como alternativa.
 
+

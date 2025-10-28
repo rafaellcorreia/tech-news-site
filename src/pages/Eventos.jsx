@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useLanguage } from '../contexts/LanguageContext';
 import EventCard from '../components/EventCard';
+import { mockEvents } from '../data/mockData';
 
 const API_BASE_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3001';
 
@@ -17,16 +18,18 @@ export default function Eventos(){
         setLoading(true);
         setError(null);
         
-        const response = await axios.get(`${API_BASE_URL}/api/events`);
+        const response = await axios.get(`${API_BASE_URL}/api/events`, { timeout: 5000 });
         
         if (response.data.success) {
           setEventos(response.data.data);
         } else {
-          setError(t('errorLoading'));
+          throw new Error('API returned error');
         }
       } catch (e) {
-        console.error('Erro ao buscar eventos:', e);
-        setError(t('errorConnecting'));
+        console.error('Erro ao buscar eventos da API, usando dados de exemplo:', e.message);
+        // Usa dados mock quando a API falhar (GitHub Pages ou backend offline)
+        setEventos(mockEvents);
+        setError(null); // Limpa o erro para não mostrar mensagem
       } finally {
         setLoading(false);
       }
@@ -39,16 +42,18 @@ export default function Eventos(){
       setLoading(true);
       setError(null);
       
-      const response = await axios.get(`${API_BASE_URL}/api/events/refresh`);
+      const response = await axios.get(`${API_BASE_URL}/api/events/refresh`, { timeout: 5000 });
       
       if (response.data.success) {
         setEventos(response.data.data);
       } else {
-        setError(t('errorUpdating'));
+        throw new Error('API returned error');
       }
     } catch (e) {
-      console.error('Erro ao atualizar eventos:', e);
-      setError(t('errorConnecting'));
+      console.error('Erro ao atualizar eventos da API, usando dados de exemplo:', e.message);
+      // Usa dados mock quando a API falhar
+      setEventos(mockEvents);
+      setError(null);
     } finally {
       setLoading(false);
     }

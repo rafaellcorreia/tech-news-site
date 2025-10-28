@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useLanguage } from '../contexts/LanguageContext';
 import NewsCard from '../components/NewsCard';
 import MusicPlayer from '../components/MusicPlayer';
+import { mockNews } from '../data/mockData';
 
 const API_BASE_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3001';
 
@@ -18,16 +19,18 @@ export default function Home(){
         setLoading(true);
         setError(null);
         
-        const response = await axios.get(`${API_BASE_URL}/api/news`);
+        const response = await axios.get(`${API_BASE_URL}/api/news`, { timeout: 5000 });
         
         if (response.data.success) {
           setNews(response.data.data);
         } else {
-          setError(t('errorLoading'));
+          throw new Error('API returned error');
         }
       } catch (e) {
-        console.error('Erro ao buscar notícias:', e);
-        setError(t('errorConnecting'));
+        console.error('Erro ao buscar notícias da API, usando dados de exemplo:', e.message);
+        // Usa dados mock quando a API falhar (GitHub Pages ou backend offline)
+        setNews(mockNews);
+        setError(null); // Limpa o erro para não mostrar mensagem
       } finally {
         setLoading(false);
       }
@@ -40,16 +43,18 @@ export default function Home(){
       setLoading(true);
       setError(null);
       
-      const response = await axios.get(`${API_BASE_URL}/api/news/refresh`);
+      const response = await axios.get(`${API_BASE_URL}/api/news/refresh`, { timeout: 5000 });
       
       if (response.data.success) {
         setNews(response.data.data);
       } else {
-        setError(t('errorUpdating'));
+        throw new Error('API returned error');
       }
     } catch (e) {
-      console.error('Erro ao atualizar notícias:', e);
-      setError(t('errorConnecting'));
+      console.error('Erro ao atualizar notícias da API, usando dados de exemplo:', e.message);
+      // Usa dados mock quando a API falhar
+      setNews(mockNews);
+      setError(null);
     } finally {
       setLoading(false);
     }

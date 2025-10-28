@@ -6,10 +6,13 @@ export default function LanguageButton() {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
+  // Usa o base path configurado
+  const baseURL = import.meta.env.BASE_URL;
+  
   const flagImages = {
-    pt: '/flags/brazil.svg',
-    en: '/flags/usa.svg',
-    es: '/flags/spain.svg'
+    pt: `${baseURL}flags/brazil.svg`,
+    en: `${baseURL}flags/usa.svg`,
+    es: `${baseURL}flags/spain.svg`
   };
 
   const flagLabels = {

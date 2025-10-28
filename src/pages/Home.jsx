@@ -5,7 +5,9 @@ import NewsCard from '../components/NewsCard';
 import MusicPlayer from '../components/MusicPlayer';
 import { mockNews } from '../data/mockData';
 
-const API_BASE_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3001';
+// Verifica se estamos em produção no GitHub Pages
+const isProduction = import.meta.env.MODE === 'production';
+const API_BASE_URL = isProduction ? null : 'http://localhost:3001';
 
 export default function Home(){
   const { t } = useLanguage();
@@ -15,6 +17,14 @@ export default function Home(){
 
   useEffect(() => {
     async function fetchNews(){
+      // Em produção (GitHub Pages), usa dados mock diretamente
+      if (isProduction || !API_BASE_URL) {
+        console.log('Usando dados de exemplo (produção)');
+        setNews(mockNews);
+        setLoading(false);
+        return;
+      }
+
       try{
         setLoading(true);
         setError(null);
@@ -28,9 +38,8 @@ export default function Home(){
         }
       } catch (e) {
         console.error('Erro ao buscar notícias da API, usando dados de exemplo:', e.message);
-        // Usa dados mock quando a API falhar (GitHub Pages ou backend offline)
         setNews(mockNews);
-        setError(null); // Limpa o erro para não mostrar mensagem
+        setError(null);
       } finally {
         setLoading(false);
       }
@@ -39,6 +48,13 @@ export default function Home(){
   }, []);
 
   const handleRefresh = async () => {
+    // Em produção, apenas recarrega os dados mock
+    if (isProduction || !API_BASE_URL) {
+      console.log('Atualizando dados de exemplo');
+      setNews([...mockNews]);
+      return;
+    }
+
     try {
       setLoading(true);
       setError(null);
@@ -52,7 +68,6 @@ export default function Home(){
       }
     } catch (e) {
       console.error('Erro ao atualizar notícias da API, usando dados de exemplo:', e.message);
-      // Usa dados mock quando a API falhar
       setNews(mockNews);
       setError(null);
     } finally {
